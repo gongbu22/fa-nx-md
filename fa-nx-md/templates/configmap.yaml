@@ -1,0 +1,73 @@
+{{/*# mariadb*/}}
+{{/*apiVersion: v1*/}}
+{{/*kind: ConfigMap*/}}
+{{/*metadata:*/}}
+{{/*  name: mariadb-config*/}}
+{{/*data:*/}}
+{{/*  MYSQL_DATABASE: "ubuntu"*/}}
+{{/*  MYSQL_USER: "ubuntu"*/}}
+{{/*  MYSQL_PASSWORD: "ubuntu"*/}}
+{{/*  MYSQL_ROOT_PASSWORD: "ubuntu"*/}}
+{{/*---*/}}
+{{/*# fastapi*/}}
+{{/*apiVersion: v1*/}}
+{{/*kind: ConfigMap*/}}
+{{/*metadata:*/}}
+{{/*  name: fastapi-config*/}}
+{{/*data:*/}}
+{{/*  main.py: |*/}}
+{{/*    from fastapi import FastAPI*/}}
+{{/*    from sqlalchemy import create_engine, text*/}}
+{{/*    from sqlalchemy.orm import sessionmaker*/}}
+
+{{/*    app = FastAPI()*/}}
+
+{{/*    engine = create_engine('mysql+pymysql://ubuntu:ubuntu@{{ .Values.mdservice.name }}:{{ .Values.mdservice.port }}/ubuntu')*/}}
+{{/*    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)*/}}
+
+{{/*    @app.get('/')*/}}
+{{/*    def index():*/}}
+{{/*      return {'Hello':'World!!'}*/}}
+
+{{/*      @app.get('/mariadb')*/}}
+{{/*    # def mariadb():*/}}
+{{/*      try:*/}}
+{{/*        with SessionLocal() as conn:*/}}
+{{/*          result = conn.execute(text('select sysdate();')).scalar()*/}}
+{{/*          return {'msg': f'Database Connection successful!!',*/}}
+{{/*            'result': f'{result}'}*/}}
+{{/*      except Exception as ex:*/}}
+{{/*        return {'msg':'Database Connection failed!!', 'error':str(ex)}*/}}
+
+{{/*  requirements.txt: |*/}}
+{{/*    fastapi*/}}
+{{/*    jinja2*/}}
+{{/*    uvicorn*/}}
+{{/*    gunicorn*/}}
+{{/*    pymysql*/}}
+{{/*    sqlalchemy*/}}
+
+
+{{/*---*/}}
+{{/*# nginx*/}}
+{{/*apiVersion: v1*/}}
+{{/*kind: ConfigMap*/}}
+{{/*metadata:*/}}
+{{/*  name: nginx-config*/}}
+{{/*data:*/}}
+{{/*  default.conf: |*/}}
+{{/*    server {*/}}
+{{/*        listen       80;*/}}
+{{/*        server_name  localhost;*/}}
+{{/*        location / {*/}}
+{{/*            proxy_pass http://{{ .Values.faservice.name }}:{{ .Values.faservice.port }};*/}}
+{{/*            proxy_set_header Host $host;*/}}
+{{/*            proxy_set_header X-Real-IP $remote_addr;*/}}
+{{/*            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;*/}}
+{{/*            proxy_set_header X-Forwarded-Proto $scheme;*/}}
+{{/*        }*/}}
+{{/*        error_page   500 502 503 504  /50x.html;*/}}
+{{/*        location = /50x.html {*/}}
+{{/*            root   /usr/share/nginx/html;*/}}
+{{/*        }*/}}
+{{/*    }*/}}

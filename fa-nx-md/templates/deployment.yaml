@@ -1,0 +1,84 @@
+# mariadb
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.mariadb.name }}
+  labels:
+    app: {{ .Values.deployment.mariadb.app }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.mariadb.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.mariadb.app }}
+    spec:
+      containers:
+        - name: {{ .Values.deployment.mariadb.app }}
+          image: {{ .Values.deployment.mariadb.image }}:{{ .Values.deployment.mariadb.tags }}
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Values.deployment.mariadb.secret }}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: helm-mariadb-storage
+      volumes:
+        - name: helm-mariadb-storage
+          emptyDir: {}
+
+---
+# fastapi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.fastapi.name }}
+  labels:
+    app: {{ .Values.deployment.fastapi.app }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.fastapi.app }}
+  template:
+    metadata:
+      name: {{ .Values.deployment.fastapi.app }}
+      labels:
+        app: {{ .Values.deployment.fastapi.app }}
+    spec:
+      containers:
+        - name: {{ .Values.deployment.fastapi.app }}
+          image: {{ .Values.deployment.fastapi.image }}:{{ .Values.deployment.fastapi.tags }}
+          ports:
+            - containerPort: 80
+              protocol: TCP
+
+---
+# nginx
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-fanginx-deploy
+  labels:
+    app: helm-fanginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helm-fanginx
+  template:
+    metadata:
+      name: helm-fanginx
+      labels:
+        app: helm-fanginx
+    spec:
+      containers:
+        - name: helm-fanginx
+          image: dangdang42/k8s-fanginx:v2
+          ports:
+            - containerPort: 80
+              protocol: TCP

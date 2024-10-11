@@ -1,0 +1,24 @@
+
+deployment:
+  mariadb:
+    name: helm-mariadb106-deploy
+    app: helm-mariadb106
+    image: mariadb
+    tags: 10.6.19-focal
+    secret: helm-mariadb-secret
+  fastapi:
+    name: helm-fastapi-deploy
+    app: helm-fastapi
+    image: dangdang42/k8s-fastapi
+    tags: v3
+
+service:
+  mariadb:
+    name: k8s-mariadb-svc
+  fastapi:
+    name: k8s-fastapi-svc
+
+
+secret:
+  mariadb:
+    name: helm-mariadb-secret

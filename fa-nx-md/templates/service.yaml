@@ -1,0 +1,41 @@
+#mariadb
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.mariadb.name }}  # 주의!
+spec:
+  selector:
+    app: helm-mariadb106
+  ports:
+    - port: 3306
+      protocol: TCP
+      targetPort: 3306
+
+
+---
+# fastapi
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.fastapi.name }}  # 주의!
+spec:
+  selector:
+    app: helm-fastapi
+  ports:
+    - port: 8000
+      protocol: TCP
+      targetPort: 8000
+
+---
+# nginx
+apiVersion: v1
+kind: Service
+metadata:
+  name: helm-fanginx-svc
+spec:
+  selector:
+    app: helm-fanginx
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
